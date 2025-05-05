@@ -1,0 +1,176 @@
+#1---------------------------------------------------------
+% Facts: Gender
+male(john).
+male(paul).
+male(tom).
+male(david).
+
+female(mary).
+female(lisa).
+female(anna).
+female(susan).
+
+% Facts: Parent relationships
+parent(john, paul).
+parent(john, lisa).
+parent(mary, paul).
+parent(mary, lisa).
+
+parent(paul, tom).
+parent(paul, anna).
+parent(susan, tom).
+parent(susan, anna).
+
+% Rules
+
+% X is father of Y if X is male and X is parent of Y
+father(X, Y) :- male(X), parent(X, Y).
+
+% X is mother of Y if X is female and X is parent of Y
+mother(X, Y) :- female(X), parent(X, Y).
+
+% X is a sibling of Y if they share at least one parent and are not the same person
+sibling(X, Y) :- parent(Z, X), parent(Z, Y), X \= Y.
+
+% X is grandfather of Y if X is male and is parent of Y's parent
+grandfather(X, Y) :- male(X), parent(X, Z), parent(Z, Y).
+
+% X is grandmother of Y if X is female and is parent of Y's parent
+grandmother(X, Y) :- female(X), parent(X, Z), parent(Z, Y).
+
+% X is child of Y if Y is parent of X
+child(X, Y) :- parent(Y, X).
+
+% X is son of Y if X is male and Y is parent of X
+son(X, Y) :- male(X), parent(Y, X).
+
+% X is daughter of Y if X is female and Y is parent of X
+daughter(X, Y) :- female(X), parent(Y, X).
+
+#2---------------------------------------------------------
+% Base case: Appending an empty list to L2 results in L2
+conc([], L2, L2).
+
+% Recursive case: Break L1 into head and tail, and build the result list
+conc([H|T], L2, [H|R]) :-
+    conc(T, L2, R).
+
+#3---------------------------------------------------------
+% reverse(List, ReversedList)
+reverse(L, R) :- reverse_acc(L, [], R).
+
+% Helper predicate: reverse_acc(List, Accumulator, Result)
+reverse_acc([], Acc, Acc).
+reverse_acc([H|T], Acc, R) :-
+    reverse_acc(T, [H|Acc], R).
+
+#4---------------------------------------------------------
+% Rule to calculate the sum of two numbers
+sum(X, Y, Z) :- Z is X + Y.
+
+#5---------------------------------------------------------
+% Rule to find maximum of two numbers
+max(X, Y, X) :- X >= Y.
+max(X, Y, Y) :- Y > X.
+
+#6---------------------------------------------------------
+% Base case: factorial of 0 is 1
+factorial(0, 1).
+
+% Recursive case: factorial of N is N * factorial(N-1)
+factorial(N, F) :-
+    N > 0,
+    N1 is N - 1,
+    factorial(N1, F1),
+    F is N * F1.
+
+#7---------------------------------------------------------
+% Base cases
+generate_fib(0, 0).
+generate_fib(1, 1).
+
+% Recursive case
+generate_fib(N, T) :-
+    N > 1,
+    N1 is N - 1,
+    N2 is N - 2,
+    generate_fib(N1, T1),
+    generate_fib(N2, T2),
+    T is T1 + T2.
+
+#8---------------------------------------------------------
+% Base case: any number raised to power 0 is 1
+power(_, 0, 1).
+
+% Recursive case: Num^Pow = Num * Num^(Pow-1)
+power(Num, Pow, Ans) :-
+    Pow > 0,
+    Pow1 is Pow - 1,
+    power(Num, Pow1, Ans1),
+    Ans is Num * Ans1.
+
+#9---------------------------------------------------------
+% Rule to multiply two numbers
+multi(N1, N2, R) :- R is N1 * N2.
+
+#10--------------------------------------------------------
+% Base case: X is a member of a list if X is the head of the list
+memb(X, [X|_]).
+
+% Recursive case: X is a member if it is in the tail of the list
+memb(X, [_|T]) :-
+    memb(X, T).
+
+#11--------------------------------------------------------
+% Base case: The sum of an empty list is 0
+sumlist([], 0).
+
+% Recursive case: Sum of the list is the head plus the sum of the tail
+sumlist([H|T], S) :-
+    sumlist(T, S1),
+    S is H + S1.
+
+#12--------------------------------------------------------
+% Base case: An empty list has length 0 (even)
+evenlength([]).
+
+% Recursive case: A list has even length if the tail has odd length
+evenlength([_|T]) :-
+    oddlength(T).
+
+% Base case: A list with one element has length 1 (odd)
+oddlength([_]).
+
+% Recursive case: A list has odd length if the tail has even length
+oddlength([_|T]) :-
+    evenlength(T).
+
+#13--------------------------------------------------------
+% Base case: The maximum of a single-element list is the element itself
+maxlist([M], M).
+
+% Recursive case: Compare the head with the maximum of the tail
+maxlist([H|T], M) :-
+    maxlist(T, M1),
+    (H > M1 -> M = H ; M = M1).
+
+#14--------------------------------------------------------
+% Base case: Insert at the first position (N = 1), so insert I at the front of the list
+insert(I, 1, L, [I|L]).
+
+% Recursive case: Decrement N and move to the next position in the list
+insert(I, N, [H|T], [H|R]) :-
+    N > 1,
+    N1 is N - 1,
+    insert(I, N1, T, R).
+
+#15--------------------------------------------------------
+% Base case: If N = 1, remove the head of the list
+delete(1, [H|T], T).
+
+% Recursive case: Decrement N and skip the head of the list
+delete(N, [H|T], [H|R]) :-
+    N > 1,
+    N1 is N - 1,
+    delete(N1, T, R).
+
